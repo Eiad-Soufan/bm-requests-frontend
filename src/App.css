@@ -1,38 +1,82 @@
+/* src/App.css */
+
+/* يبقى كما هو */
 .App {
   text-align: center;
 }
 
+/* شعار مرن: نفس الإحساس على الديسكتوب، آمن على الجوال */
 .App-logo {
-  height: 40vmin;
+  height: clamp(96px, 40vmin, 240px);
+  width: auto;
   pointer-events: none;
 }
 
+/* الحركة فقط لمن يفضّلها */
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
+@media (prefers-reduced-motion: reduce) {
+  .App-logo {
+    animation: none !important;
+  }
+}
 
+/* رأس الصفحة: نفس الخلفية والتمركز
+   - معالجة 100vh على الجوال
+   - احترام الـ notch / الحواف الآمنة
+   - حجم خط مضبوط لا يكبر/يصغر بشكل مزعج */
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+
+  /* تدرّج احتياطي للوحدات الحديثة */
+  min-height: 100vh;   /* أقدم دعم */
+  min-height: 100svh;  /* small viewport unit للجوال */
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+
+  font-size: clamp(16px, calc(10px + 2vmin), 22px);
   color: white;
+  text-align: center;
+
+  /*Padding يحترم حواف الأجهزة ذات النوتش*/
+  padding: max(24px, env(safe-area-inset-top))
+           max(16px, env(safe-area-inset-right))
+           max(24px, env(safe-area-inset-bottom))
+           max(16px, env(safe-area-inset-left));
 }
 
+/* إذا كان المتصفح يدعم dvh (الأدق مع شريط العنوان المتحرك) */
+@supports (height: 100dvh) {
+  .App-header {
+    min-height: 100dvh;
+  }
+}
+
+/* لون الرابط كما هو + تحسّن بصري خفيف */
 .App-link {
   color: #61dafb;
+  text-underline-offset: 0.2em;
 }
 
+/* ضبط إضافي للشاشات الصغيرة جدًا */
+@media (max-width: 576px) {
+  .App-header {
+    gap: 12px; /* مسافة بين العناصر بدل تراكمها */
+  }
+  .App-logo {
+    /* تقليل السقف على الشاشات الصغيرة من دون تغيير شكل الديسكتوب */
+    height: clamp(96px, 28vmin, 180px);
+  }
+}
+
+/* كما هو */
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
