@@ -3,37 +3,28 @@
   <head>
     <meta charset="utf-8" />
 
-    <!-- تحسين تحميل الخطوط -->
+    <!-- Fonts (أسرع تحميل) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <!-- مهم للجوال + حواف الشاشة (notch) -->
+    <!-- أيقونات وتطبيق -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- موبايل/حواف الشاشة -->
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
     <!-- ألوان شريط المتصفح حسب الثيم -->
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-
-    <!-- احترام الثيمات النظامية لعناصر الفورم الافتراضية -->
     <meta name="color-scheme" content="light dark" />
 
-    <!-- PWA / iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-
+    <meta name="description" content="Web site created using create-react-app" />
     <title>React App</title>
 
-    <!-- أساسيات خفيفة تحسّن تجاوب الموبايل بدون لمس ستايلك -->
+    <!-- أساسيات خفيفة + إصلاح ظهور نص الحقول -->
     <style>
       *, *::before, *::after { box-sizing: border-box; }
       html { -webkit-text-size-adjust: 100%; }
@@ -46,6 +37,26 @@
         text-rendering: optimizeLegibility;
       }
       img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
+
+      /* ===== إصلاح مهم: اجعل نص الحقول مرئيًا دائمًا ===== */
+      #root input, #root textarea, #root select {
+        color: #0f172a !important;          /* نص داكن */
+        -webkit-text-fill-color: #0f172a;   /* لسفاري */
+        background-color: #ffffff;          /* خلفية بيضاء صريحة */
+        caret-color: #0f172a;               /* لون مؤشّر الكتابة */
+        font: inherit;
+      }
+      #root input::placeholder, #root textarea::placeholder {
+        color: #6b7280;
+        opacity: 1;
+      }
+      /* معالجة أوتو-فِلّ كروم/سفاري (الخلفية الصفراء) */
+      #root input:-webkit-autofill,
+      #root textarea:-webkit-autofill,
+      #root select:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+        -webkit-text-fill-color: #0f172a !important;
+      }
     </style>
   </head>
   <body>
