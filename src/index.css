@@ -1,13 +1,99 @@
+/* ========== Base: بلا ما نكسر تصميمك الحالي ========== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: "Cairo", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* صور/فيديو مرنة تمنع تجاوز العرض */
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* عناصر الفورم لا تكسر العرض على الشاشات الصغيرة */
+input, select, textarea, button {
+  font: inherit;
+  max-width: 100%;
+}
+
+/* احترام تقليل الحركة */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ========== Utilities: تستخدمها فقط عند الحاجة ========== */
+
+/* حاوية مرنة قياسية */
+.container {
+  width: min(100% - 2rem, 1200px);
+  margin-inline: auto;
+}
+
+/* شبكة بطاقات مرنة (تتكيف تلقائيًا) */
+.grid {
+  display: grid;
+  gap: 16px;
+}
+.grid--cards {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+/* فليكس يلتف لمنع التراكم */
+.flex { display: flex; flex-wrap: wrap; gap: 16px; }
+.flex > * { min-width: 0; } /* مهم لمنع تجاوز النص داخل flex */
+
+/* تمرير أفقي للمحتوى العريض (جداول إلخ) */
+.responsive-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* كلمات/روابط طويلة لا تكسر التخطيط */
+.wrap-any { overflow-wrap: anywhere; word-break: break-word; }
+
+/* صور خلفية تغطي الحاوية */
+.bg-cover { background-size: cover; background-position: center; }
+
+/* لصور <img> التي تحتاج cover داخل حاوية محددة */
+.object-cover { object-fit: cover; width: 100%; height: 100%; }
+
+/* تعويض هيدر ثابت إن وُجد (اضبط المتغير من ملفك) */
+.has-fixed-header { padding-top: var(--header-h, 64px); }
+
+/* زر بعرض كامل على الشاشات الصغيرة (اختياري) */
+@media (max-width: 576px) {
+  .btn-block-sm { width: 100%; }
+}
+
+/* إخفاء بصري للمحتوى (للـA11y) */
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: -1px !important;
 }
