@@ -182,7 +182,7 @@ export default function Header() {
         }
         .bm-header.is-scrolled{ --bm-alpha:.72; box-shadow:0 12px 30px rgba(0,0,0,.18); }
 
-        /* الحاوية الآن تلتف تلقائيًا عند ضيق العرض */
+        /* الحاوية تلتف تلقائيًا، ومع الجوال نصبح صفّين (Brand فوق، Actions تحت) */
         .bm-container{
           display:flex; align-items:center; justify-content:space-between;
           gap:12px; row-gap:8px; flex-wrap:wrap;
@@ -194,7 +194,7 @@ export default function Header() {
         /* Brand */
         .bm-brand{
           display:flex; align-items:center; gap:12px; min-width:0;
-          flex: 1 1 auto;                /* يأخذ المتاح بدون كسر الأزرار */
+          flex: 1 1 auto;
           cursor: pointer;
         }
         .bm-logo-wrap{
@@ -214,25 +214,26 @@ export default function Header() {
         .bm-brand-text{ display:flex; flex-direction:column; min-width:0; }
         .bm-brand-title{
           color:#fff; text-decoration:none; font-weight:800;
-          font-size:clamp(1rem, 2.2vw, 1.18rem); line-height:1.05;
+          font-size:clamp(1rem, 2.2vw, 1.18rem); line-height:1.15;
           text-shadow: 0 1px 0 rgba(0,0,0,.08);
           transition: opacity .12s ease, text-shadow .2s ease;
+          /* على الديسكتوب قصّ خفيف لتجنّب التداخل */
           white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-          max-width: clamp(160px, 36vw, 520px); /* يمنع خروج العنوان */
+          max-width: clamp(160px, 36vw, 640px);
           display:inline-block;
         }
         .bm-brand-title:hover{ opacity:.95; text-shadow: 0 2px 10px rgba(0,0,0,.16); }
         .bm-brand-tagline{
-          opacity:.96; font-size:.9rem; line-height:1.2;
+          opacity:.96; font-size:.9rem; line-height:1.25;
           white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-          max-width: clamp(180px, 38vw, 540px);
+          max-width: clamp(180px, 38vw, 680px);
         }
 
         /* Actions */
         .bm-actions{
           display:flex; align-items:center; gap:12px; flex-wrap:wrap;
           justify-content:flex-end;
-          flex: 0 1 auto;                 /* لا تأخذ أكثر من اللازم */
+          flex: 0 1 auto;
           min-width: 0;
         }
 
@@ -252,7 +253,7 @@ export default function Header() {
           border-radius: var(--bm-radius);
           padding: 6px 10px;
           display:inline-flex; align-items:center; gap:10px;
-          max-width: clamp(160px, 28vw, 260px);  /* يمنع الخروج ويصغّر على الجوال */
+          max-width: clamp(160px, 28vw, 260px);
           min-width: 0;
         }
         .bm-avatar{ width:28px; height:28px; border-radius:50%; background: rgba(255,255,255,.22); display:grid; place-items:center; font-weight:800; box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); flex:0 0 auto; }
@@ -275,26 +276,58 @@ export default function Header() {
         }
         .bm-logout-icon{ font-size:16px; line-height:1; }
 
-        /* نقاط توقف */
-        @media (max-width: 1100px){
-          .bm-brand-tagline{ display:none; } /* توفير مساحة مبكرة */
-        }
-        @media (max-width: 768px){
-          .bm-container{ gap:10px; row-gap:6px; }
-          .bm-actions{ gap:10px; }
-          .bm-lang{ padding:3px 6px; }
-        }
+        /* ===== نقاط توقف ===== */
+        /* عند الشاشات الصغيرة: Brand يأخذ صف كامل، والنص يلتف ويظهر بالكامل */
         @media (max-width: 576px){
-          .bm-userextra{ display:none; }
+          .bm-brand{ flex: 1 0 100%; order: 0; }
+          .bm-actions{ flex: 1 0 100%; order: 1; justify-content:flex-start; gap:10px; }
+
           .bm-logo-wrap{ width:44px; height:44px; }
-          .bm-logout-text{ display:none; } /* نحافظ على المساحة على الشاشات الصغيرة */
+
+          .bm-brand-title,
+          .bm-brand-tagline{
+            white-space: normal;         /* إلغاء القصّ */
+            overflow: visible;
+            text-overflow: clip;
+            max-width: 100%;             /* اسم + توصيف بكامل العرض */
+          }
+
+          /* تقليل العناصر الثانوية قليلًا */
+          .bm-userextra{ display:none; }
+          .bm-logout-text{ display:none; }
           .bm-lang{ gap:6px; }
           .bm-langbtn{ padding:3px 6px; }
         }
+
+        /* أصغر من 420px: مزيد من ضغط الفراغات */
         @media (max-width: 420px){
-          .bm-username{ display:none; }      /* أبقي الأيقونة فقط */
-          .bm-userchip{ padding:4px 8px; max-width: 160px; }
           .bm-actions{ gap:8px; }
+          .bm-userchip{ padding:4px 8px; max-width: 180px; }
+          .bm-username{ display:none; } /* نبقي الأيقونة فقط */
+        }
+
+        /* ===== تثبيت الـ Popovers/Dropdowns داخل الشاشة على الجوال ===== */
+        /* نجعل كل عنصر داخل .bm-actions مرجعًا للتموضع */
+        .bm-actions > * { position: relative; }
+
+        @media (max-width: 576px){
+          /* حاولنا تغطية أشهر مسميات القوائم المنبثقة */
+          .bm-actions .dropdown-menu,
+          .bm-actions .bm-popover,
+          .bm-actions [data-popover],
+          .bm-actions [role="dialog"].popover,
+          .bm-actions .popover {
+            position: absolute !important;
+            left: 50% !important;
+            right: auto !important;
+            transform: translateX(-50%) translateY(8px) !important;
+            top: calc(100% + 6px) !important;
+            max-width: calc(100vw - 24px);
+            width: max-content;
+            min-width: 240px;
+            inset-inline: auto; /* احتياط */
+            z-index: 1050;
+          }
         }
       `}</style>
     </>
