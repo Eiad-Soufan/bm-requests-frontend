@@ -97,3 +97,37 @@ input, select, textarea, button {
   padding: 0 !important;
   margin: -1px !important;
 }
+
+
+/* ارتفاع الهيدر لتثبيت موضع القوائم تحته */
+:root { --header-h: 56px; }
+@media (min-width: 577px){ :root { --header-h: 64px; } }
+
+/* ✅ على الشاشات الصغيرة: ثبّت أي قائمة منبثقة داخل الشاشة */
+@media (max-width: 576px){
+  .dropdown-menu.show,
+  .popover.show,
+  .popover,
+  .bm-popover,
+  .bm-pop-fix,           /* استعمل هذا الكلاس إن كانت قائمتك مخصّصة */
+  [data-popper-placement],
+  [role="menu"],
+  [role="dialog"].popover {
+    position: fixed !important;          /* بدل absolute/transform */
+    top: calc(var(--header-h) + 8px) !important;
+    left: 12px !important;
+    right: 12px !important;              /* يمنع الخروج يمين/يسار */
+    width: auto !important;
+    max-width: none !important;
+    transform: none !important;
+    margin: 0 !important;
+    max-height: calc(100dvh - var(--header-h) - 24px) !important; /* تمرير لو طالت */
+    overflow: auto;
+    z-index: 2000 !important;            /* أعلى من الهيدر (z=1030) */
+    border-radius: 12px;
+  }
+
+  /* السهم الصغير يسبب قصّ على الأطراف — نخفيه على الموبايل */
+  .popover .popover-arrow,
+  .dropdown-menu .arrow { display: none !important; }
+}
