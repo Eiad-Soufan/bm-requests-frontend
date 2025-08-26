@@ -38,6 +38,15 @@ export default function Header() {
   }, [i18n]);
 
   useEffect(() => { document.title = systemTitle || 'Portal'; }, [systemTitle, i18n.language]);
+useEffect(() => {
+  const updateHeaderVar = () => {
+    const h = headerRef.current?.offsetHeight || 56;
+    document.documentElement.style.setProperty('--header-h', `${h}px`);
+  };
+  updateHeaderVar();
+  window.addEventListener('resize', updateHeaderVar);
+  return () => window.removeEventListener('resize', updateHeaderVar);
+}, []);
 
   // زجاجي عند التمرير
   useEffect(() => {
@@ -333,3 +342,4 @@ export default function Header() {
     </>
   );
 }
+
