@@ -65,17 +65,37 @@ export default function Header() {
     navigate('/login');
   };
 
+  // دعم الكيبورد للعنصر القابل للنقر
+  const onBrandKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      navigate('/dashboard');
+    }
+  };
+
   return (
     <>
       <header className="bm-header" ref={headerRef}>
         <div className="bm-container">
           {/* ===== Brand ===== */}
-          <div className="bm-brand" onClick={() => navigate('/dashboard')} role="button" title={systemTitle}>
+          <div
+            className="bm-brand"
+            onClick={() => navigate('/dashboard')}
+            onKeyDown={onBrandKeyDown}
+            role="button"
+            tabIndex={0}
+            title={systemTitle}
+          >
             <div className="bm-logo-wrap">
               <img src={logo2} alt="logo" className="bm-logo-img" />
             </div>
             <div className="bm-brand-text">
-              <Link to="/dashboard" className="bm-brand-title" onClick={(e) => e.stopPropagation()}>
+              <Link
+                to="/dashboard"
+                className="bm-brand-title"
+                onClick={(e) => e.stopPropagation()}
+                title={systemTitle}
+              >
                 {systemTitle}
               </Link>
               <div className="bm-brand-tagline">{systemSubtitle}</div>
@@ -83,7 +103,7 @@ export default function Header() {
           </div>
 
           {/* ===== Actions ===== */}
-          <div className="bm-actions">
+          <div className="bm-actions" aria-label="Header actions">
             <ComplaintsButton />
             <NotificationButton />
 
@@ -96,7 +116,7 @@ export default function Header() {
               >
                 AR
               </button>
-              <span className="bm-langsep">|</span>
+              <span className="bm-langsep" aria-hidden>|</span>
               <button
                 className={`bm-langbtn ${!isAR ? 'active' : ''}`}
                 onClick={() => setLang('en')}
@@ -136,7 +156,7 @@ export default function Header() {
       <style>{`
         :root{
           --bm-radius:12px;
-          --bm-green-1:#10c48b;   /* نفس درجات الهيدر */
+          --bm-green-1:#10c48b;
           --bm-green-2:#0ea36b;
           --bm-green-3:#0a6f47;
           --bm-sheen:rgba(255,255,255,0.14);
@@ -162,17 +182,28 @@ export default function Header() {
         }
         .bm-header.is-scrolled{ --bm-alpha:.72; box-shadow:0 12px 30px rgba(0,0,0,.18); }
 
-        .bm-container{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 18px; }
+        /* الحاوية الآن تلتف تلقائيًا عند ضيق العرض */
+        .bm-container{
+          display:flex; align-items:center; justify-content:space-between;
+          gap:12px; row-gap:8px; flex-wrap:wrap;
+          padding-block: 12px;
+          padding-inline: max(12px, calc(env(safe-area-inset-left) + 12px))
+                          max(12px, calc(env(safe-area-inset-right) + 12px));
+        }
 
         /* Brand */
-        .bm-brand{ display:flex; align-items:center; gap:12px; min-width:0; }
+        .bm-brand{
+          display:flex; align-items:center; gap:12px; min-width:0;
+          flex: 1 1 auto;                /* يأخذ المتاح بدون كسر الأزرار */
+          cursor: pointer;
+        }
         .bm-logo-wrap{
           width:48px; height:48px; border-radius:var(--bm-radius);
           background: rgba(255,255,255,.12);
           display:grid; place-items:center;
           box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
           transition: transform .16s ease, background .16s ease, box-shadow .16s ease;
-          padding:0; overflow:hidden;
+          padding:0; overflow:hidden; flex:0 0 auto;
         }
         .bm-logo-img{ width:100%; height:100%; object-fit:contain; display:block; }
         .bm-brand:hover .bm-logo-wrap{
@@ -182,15 +213,28 @@ export default function Header() {
         }
         .bm-brand-text{ display:flex; flex-direction:column; min-width:0; }
         .bm-brand-title{
-          color:#fff; text-decoration:none; font-weight:800; font-size:1.18rem; line-height:1.05;
+          color:#fff; text-decoration:none; font-weight:800;
+          font-size:clamp(1rem, 2.2vw, 1.18rem); line-height:1.05;
           text-shadow: 0 1px 0 rgba(0,0,0,.08);
           transition: opacity .12s ease, text-shadow .2s ease;
+          white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+          max-width: clamp(160px, 36vw, 520px); /* يمنع خروج العنوان */
+          display:inline-block;
         }
         .bm-brand-title:hover{ opacity:.95; text-shadow: 0 2px 10px rgba(0,0,0,.16); }
-        .bm-brand-tagline{ opacity:.96; font-size:.9rem; line-height:1.2; }
+        .bm-brand-tagline{
+          opacity:.96; font-size:.9rem; line-height:1.2;
+          white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+          max-width: clamp(180px, 38vw, 540px);
+        }
 
         /* Actions */
-        .bm-actions{ display:flex; align-items:center; gap:12px; }
+        .bm-actions{
+          display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+          justify-content:flex-end;
+          flex: 0 1 auto;                 /* لا تأخذ أكثر من اللازم */
+          min-width: 0;
+        }
 
         /* Lang switch */
         .bm-lang{ display:flex; align-items:center; gap:8px; background: rgba(255,255,255,.14); border-radius: var(--bm-radius); padding: 4px 8px; }
@@ -207,12 +251,14 @@ export default function Header() {
           background: rgba(255,255,255,.14); color:#fff;
           border-radius: var(--bm-radius);
           padding: 6px 10px;
-          display:inline-flex; align-items:center; gap:10px; max-width:260px;
+          display:inline-flex; align-items:center; gap:10px;
+          max-width: clamp(160px, 28vw, 260px);  /* يمنع الخروج ويصغّر على الجوال */
+          min-width: 0;
         }
-        .bm-avatar{ width:28px; height:28px; border-radius:50%; background: rgba(255,255,255,.22); display:grid; place-items:center; font-weight:800; box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); }
+        .bm-avatar{ width:28px; height:28px; border-radius:50%; background: rgba(255,255,255,.22); display:grid; place-items:center; font-weight:800; box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); flex:0 0 auto; }
         .bm-userinfo{ display:flex; flex-direction:column; min-width:0; }
-        .bm-username{ max-width:180px; font-weight:700; line-height:1.1; }
-        .bm-userextra{ max-width:180px; font-size:.78rem; opacity:.92; }
+        .bm-username{ max-width:100%; font-weight:700; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .bm-userextra{ max-width:100%; font-size:.78rem; opacity:.92; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
         /* ✅ زر تسجيل الخروج */
         .bm-logout{
@@ -229,12 +275,26 @@ export default function Header() {
         }
         .bm-logout-icon{ font-size:16px; line-height:1; }
 
-        /* Responsive */
-        @media (max-width: 992px){ .bm-brand-tagline{ display:none; } }
+        /* نقاط توقف */
+        @media (max-width: 1100px){
+          .bm-brand-tagline{ display:none; } /* توفير مساحة مبكرة */
+        }
+        @media (max-width: 768px){
+          .bm-container{ gap:10px; row-gap:6px; }
+          .bm-actions{ gap:10px; }
+          .bm-lang{ padding:3px 6px; }
+        }
         @media (max-width: 576px){
           .bm-userextra{ display:none; }
           .bm-logo-wrap{ width:44px; height:44px; }
           .bm-logout-text{ display:none; } /* نحافظ على المساحة على الشاشات الصغيرة */
+          .bm-lang{ gap:6px; }
+          .bm-langbtn{ padding:3px 6px; }
+        }
+        @media (max-width: 420px){
+          .bm-username{ display:none; }      /* أبقي الأيقونة فقط */
+          .bm-userchip{ padding:4px 8px; max-width: 160px; }
+          .bm-actions{ gap:8px; }
         }
       `}</style>
     </>
