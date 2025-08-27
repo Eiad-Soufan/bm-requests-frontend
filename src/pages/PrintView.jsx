@@ -8,7 +8,7 @@ function PrintView() {
 
   useEffect(() => {
     if (id) {
-      setFormUrl(`http://localhost:8000/api/preview-form/${id}/`);
+      setFormUrl(`https://berkat-madinah-portal.netlify.app/api/preview-form/${id}/`);
     }
   }, [id]);
 
@@ -87,3 +87,4 @@ function PrintView() {
 }
 
 export default PrintView;
+
